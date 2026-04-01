@@ -1,31 +1,30 @@
-# 122483 Eduardo Fragoso
-name: "Code Smell Detection - Large Class (IGE-122483)"
+# IGE-122483 - Eduardo Fragoso
+# Code Smell: Large Class (Martin Fowler)
+# Deteta classes com demasiados métodos (WMC >= 20) ou atributos (NOA >= 15)
+# Baseado em: Object-Oriented Metrics in Practice (Lanza & Marinescu)
+
+name: Detect Large Class Code Smell
 
 on:
   push:
-    branches: [ main, feature/** ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  large-class-detection:
+  detect-large-class:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Qodana Scan - Large Class Detection
-        uses: JetBrains/qodana-action@v2025.3
-        with:
-          args: --config,qodana-smell.yaml
+      - name: Run Qodana for JVM
+        uses: JetBrains/qodana-action@v2024.3
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
